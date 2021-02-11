@@ -9,3 +9,5 @@
 
 # DS_Store File
 .DS_Store
+/.idea/
+test-app.iml
