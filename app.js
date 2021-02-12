@@ -1,7 +1,10 @@
 class BlindTestPlayer extends HTMLElement {
+    /*
     static get observedAttributes() {
-        return ["start", "increment", "current" ]
+        return []
     }
+    */
+
     constructor (value) {
         super()
         this.playerid = value
@@ -24,8 +27,11 @@ customElements.define('blindtest-player', BlindTestPlayer)
 
 /*  ------  */
 
-const maxpoints = 5;
+const maxpoints = 20;
 
+document.querySelector("#reset").addEventListener('click', function(){
+    document.querySelectorAll("span#score").forEach(e => { e.innerHTML = "0" })
+})
 
 document.querySelector("#addPlayer").addEventListener('click', function(){
     const container = document.getElementById("main")

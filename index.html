@@ -4,11 +4,23 @@
     <meta charset="UTF-8">
     <title>Simple leaderBoard</title>
     <link rel="stylesheet" href="css/bootstrap.min.css">
+
+    <style>
+        #score{
+            min-width: 3em;
+            text-align: right;
+            display: block;
+        }
+    </style>
+
 </head>
 <body>
 <div id="main" class="container">
     <h1 class="mt-5">Simple leaderBoard</h1>
+    <div class="d-grid gap-2 d-flex justify-content-between">
         <a id="addPlayer" class="btn btn-sm btn-primary" value="1">Add new player</a>
+        <a id="reset" class="btn btn-sm btn-outline-danger">Reset score</a>
+    </div>
 </div>
 <script src="js/bootstrap.min.js"></script>
 <script src="app.js"></script>
