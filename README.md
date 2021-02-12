@@ -1,5 +1,5 @@
 # leaderboard
 
-Simple Leaderboard to manage a quizz
+Simple Leaderboard to manage a Quizz
 
-![screenshot](/screenshot.png "screenshot")
+![screenshot](screenshot.png "screenshot")
