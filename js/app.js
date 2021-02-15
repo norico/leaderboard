@@ -1,74 +1,59 @@
-const maxpoints = 3;
-const pointText = (maxpoints > 1) ? ' points' : ' point'
+const app_version = "1.0"
+const app_title = "Leaderboard"
 
-document.querySelector("#reset").addEventListener('click', function(){
-    document.querySelectorAll("span#score").forEach(e => { e.innerHTML = "0" })
-})
+function set_title(){
+    return app_title+' '+app_version
+}
+document.title = set_title()
 
-document.querySelector("#addPlayer").addEventListener('click', function(){
-    const container = document.getElementById("main")
-    const counterElement  = document.getElementById("addPlayer")
-    let counter = parseInt(counterElement.getAttribute('value'))
-    container.appendChild( new BlindTestPlayer(counter) )
-    newCounter = counter+1
-    counterElement.setAttribute("value", newCounter )
-})
-
-const info     = document.createElement("small")
-const infoText = document.createTextNode(maxpoints + pointText)
-
-info.classList.add("text-muted", "align-self-center", "pt-4", 'me-2' )
-
-info.appendChild(infoText)
-document.getElementById("title").appendChild(info)
-
-function remove(id){
-    document.getElementById(id).parentNode.remove()
+const Player = function (row_id) {
+    this.row_id = row_id
+    document.getElementById("players").appendChild(new RowPlayer(this.row_id))
 }
 
-function scoring(id, action){
-    let current_player = id
-    let score = document.getElementById(id).children.namedItem('score')
-    let playername = document.getElementById(id).children.namedItem('playername').value
-    let current_score = parseInt(score.innerHTML)
-    let new_score = current_score
-    if ( action === 'add' && current_score < maxpoints && playername != "" ){
-        new_score = current_score+1
-        console.log("Add point to " + playername )
-    }
-    if ( action === 'remove' && current_score >0 ){
-        new_score = current_score-1
-        console.log("Remove point to " + playername )
-    }
-    score.innerHTML = new_score
-    if ( new_score === maxpoints ){
-        const WinnerPlayer = document.getElementsByClassName('modal-body')
-        WinnerPlayer[0].innerHTML = '<p class="text-center fs-3">'+playername+'</p>'
-        const Winner = new bootstrap.Modal(document.getElementById('winner'), {
-            backdrop: true
-        })
-        Winner.show();
-    }
+const add_player = document.getElementById("add").addEventListener("click", function(){
+    let row_id = document.getElementById("add")
+    let current = row_id.getAttribute('value')
+    new Player(current)
+    let next_id = parseInt(current)+1
+    row_id.setAttribute("value", next_id)
+})
 
-    let close = document.getElementById('modal-reset')
-    close.addEventListener("click", function(){
-        document.querySelectorAll("span#score").forEach(e => { e.innerHTML = "0" })
-    })
+/* ------- */
 
+class RowPlayer extends HTMLElement {
+    constructor(row_id) {
+        super();
+        this.playerID = row_id
 
-}
+        this.onclick = function(event ){
+            if ( ev.target.tagName === "BUTTON" )
+            {
+                execute_action( event.target.id, this.playerID )
+            }
+        }
 
-class BlindTestPlayer extends HTMLElement {
-    constructor (value) {
-        super()
-        this.playerid = value
-        this.innerHTML =  '<div id="'+ this.playerid +'" class="input-group my-1">'+
-            '<button type="button" onclick="remove('+ this.playerid +')" class="btn btn-danger">x</button>' +
-            '<button type="button" onclick="scoring('+ this.playerid +', \'remove\' )" class="btn btn-warning">-</button>' +
-            '<button type="button" onclick="scoring('+ this.playerid +', \'add\' )" class="btn btn-success">+</button>' +
-            '<input type="text" class="form-control" id="playername" placeholder="New player">' +
-            '<span class="input-group-text" id="score">0</span>'+
+        this.innerHTML = ''+
+            '<div id="'+this.playerID+'" class="row mb-1">'+
+            '   <div class="col py-1 d-inline-flex">' +
+            '       <div class="btn-group me-2" role="group" style="padding-top: 0;">' +
+            '           <button id="delete-player" type="button" class="btn btn-sm btn-danger bi-person-dash-fill"></button>' +
+            '           <button id="remove-point" type="button" class="btn btn-sm btn-warning bi-dash"></button>' +
+            '           <button id="add-point"    type="button" class="btn btn-sm btn-success bi-plus"></button>' +
+            '       </div>' +
+            '       <div class="input-group">' +
+            '           <input type="text" class="form-control">' +
+            '           <span class="input-group-text">0</span>'+
+            '       </div>' +
+            '   </div>' +
             '</div>'
+
+        const execute_action = function( target , playerID  ) {
+            console.log( target, playerID )
+
+        }
+
     }
 }
-customElements.define('blindtest-player', BlindTestPlayer)
+customElements.define('new-player', RowPlayer)
+
