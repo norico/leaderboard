@@ -1,59 +1,37 @@
-const app_version = "1.0"
-const app_title = "Leaderboard"
+import {Config} from './config.js'
+import Player from './player.js'
+import Storage from './storage.js'
 
-function set_title(){
-    return app_title+' '+app_version
-}
-document.title = set_title()
+customElements.define('new-player', Player);
 
-const Player = function (row_id) {
-    this.row_id = row_id
-    document.getElementById("players").appendChild(new RowPlayer(this.row_id))
-}
+let pointText = (Config.max_points > 1 ) ? ' points' : ' point'
+document.title = Config.title
 
-const add_player = document.getElementById("add").addEventListener("click", function(){
-    let row_id = document.getElementById("add")
-    let current = row_id.getAttribute('value')
-    new Player(current)
-    let next_id = parseInt(current)+1
-    row_id.setAttribute("value", next_id)
+document.querySelector("#title").innerHTML = Config.title
+document.querySelector("#max_points").innerHTML = 'Round in '+Config.max_points+pointText
+
+document.querySelector('#add').addEventListener('click', function(){
+    let counter_players = this.getAttribute('value')
+    document.getElementById("players").appendChild( new Player(counter_players, Config.max_points))
+    counter_players = parseInt(counter_players)
+    this.setAttribute('value', counter_players+1)
+});
+document.querySelector('#reset').addEventListener('click', function(){
+    document.querySelectorAll("span#score").forEach(e => { e.innerHTML = "0" })
+});
+
+
+document.querySelector('#sort').addEventListener('click', function(){
+    // TODO : Sorting
+
 })
 
-/* ------- */
 
-class RowPlayer extends HTMLElement {
-    constructor(row_id) {
-        super();
-        this.playerID = row_id
 
-        this.onclick = function(event ){
-            if ( ev.target.tagName === "BUTTON" )
-            {
-                execute_action( event.target.id, this.playerID )
-            }
-        }
-
-        this.innerHTML = ''+
-            '<div id="'+this.playerID+'" class="row mb-1">'+
-            '   <div class="col py-1 d-inline-flex">' +
-            '       <div class="btn-group me-2" role="group" style="padding-top: 0;">' +
-            '           <button id="delete-player" type="button" class="btn btn-sm btn-danger bi-person-dash-fill"></button>' +
-            '           <button id="remove-point" type="button" class="btn btn-sm btn-warning bi-dash"></button>' +
-            '           <button id="add-point"    type="button" class="btn btn-sm btn-success bi-plus"></button>' +
-            '       </div>' +
-            '       <div class="input-group">' +
-            '           <input type="text" class="form-control">' +
-            '           <span class="input-group-text">0</span>'+
-            '       </div>' +
-            '   </div>' +
-            '</div>'
-
-        const execute_action = function( target , playerID  ) {
-            console.log( target, playerID )
-
-        }
-
-    }
+if( Config.storage === true) {
+    // TODO : Local Storage
+    /*
+    customElements.define('top-player', Storage);
+    document.querySelector('#top-players').appendChild( new Storage() );
+    */
 }
-customElements.define('new-player', RowPlayer)
-
